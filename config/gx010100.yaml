@@ -2,8 +2,10 @@
 # シーン選定と crop_x は scripts/analyze_subject.py (YOLOv8, 間隔3.0秒) の
 # 品質スコア上位区間に基づく (scratch/subject_analysis.json)
 # ナレーションの声: 被写体はメスのため女の子の声 (Meta AI TTS の MAI_01、
-# F0中央値 274Hz) への差し替えが提案済み。現行レンダーは既定の MAI_03。
-# 差し替える場合は generate_narration.py --voice avocado_v2:MAI_01 で再生成する
+# F0中央値 274Hz) に差し替え済み (generate_narration.py --voice avocado_v2:MAI_01)。
+# ただし outputs/gx010100_final.mp4 (HD版) は旧声 MAI_03 のままで、
+# HD で最終化する際は本設定で再レンダリングが必要。
+# SD版 outputs/gx010100_sd.mp4 (config/gx010100_sd.yaml) は新声で出力済み
 project:
   title: "ポメラニアンのおうち探検 (GX010100)"
   input_video: "inputs/GX010100.MP4"

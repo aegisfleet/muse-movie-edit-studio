@@ -118,6 +118,11 @@ def step_1_cut_and_grade_background(config: dict, ffmpeg_path: str):
 
     xfade_duration = 0.4
     fps = config["project"].get("target_fps", 30)
+    # 出力解像度は設定に従う (project.resolution)。SD プレビュー等の検証では
+    # ここを下げることで Step 1 のスケール/エンコード負荷を下げられる
+    resolution = config["project"].get("resolution", {}) or {}
+    out_w = int(resolution.get("width", 1080))
+    out_h = int(resolution.get("height", 1920))
     default_profile = "curves=master='0/0 0.15/0.25 0.4/0.52 0.75/0.82 1/1',eq=contrast=1.05:saturation=1.26"
 
     inputs = []
@@ -186,8 +191,8 @@ def step_1_cut_and_grade_background(config: dict, ffmpeg_path: str):
             f"[{idx}:v]fps={fps},"
             f"{color_chain}"
             f"{grade_opt},"
-            f"scale=1080:1920:force_original_aspect_ratio=increase,"
-            f"crop=1080:1920:(in_w-out_w)*{crop_x_ratio}:(in_h-out_h)/2,setsar=1[v{idx}]"
+            f"scale={out_w}:{out_h}:force_original_aspect_ratio=increase,"
+            f"crop={out_w}:{out_h}:(in_w-out_w)*{crop_x_ratio}:(in_h-out_h)/2,setsar=1[v{idx}]"
         )
         filter_chains.append(chain)
 
@@ -264,7 +269,7 @@ def step_1_cut_and_grade_background(config: dict, ffmpeg_path: str):
     except Exception as e:
         print(f"[Warning] Live audio extraction skipped or failed: {e}")
 
-def step_2_render_remotion_composition(output_video_path: Path):
+def step_2_render_remotion_composition(output_video_path: Path, config: dict = None):
     """RemotionでJIZURA風エフェクトと字幕を合成してfinal.mp4を出力"""
     print("\n[Step 2/3] Rendering Remotion Composition (JIZURA-style Effects & Typography)...")
     output_video_path.parent.mkdir(parents=True, exist_ok=True)
@@ -279,6 +284,13 @@ def step_2_render_remotion_composition(output_video_path: Path):
         f"--concurrency={concurrency}",
         f"--gl={gl_backend}"
     ]
+    # project.output_scale (例: 0.5) があれば Remotion の出力も縮小する。
+    # Step 1 の解像度 (project.resolution) と揃えることで SD 出力になる
+    output_scale = None
+    if config:
+        output_scale = config.get("project", {}).get("output_scale")
+    if output_scale and float(output_scale) != 1.0:
+        cmd.append(f"--scale={output_scale}")
     print(f"Running Remotion CLI -> {output_video_path}")
     subprocess.run(cmd, check=True)
     print(f"\n[Step 3/3] Video editing complete! Final video output: {output_video_path}")
@@ -317,7 +329,7 @@ def main():
         step_1_cut_and_grade_background(full_config, ffmpeg_path)
 
     if args.step in ["all", "2"]:
-        step_2_render_remotion_composition(out_final)
+        step_2_render_remotion_composition(out_final, full_config)
 
 if __name__ == "__main__":
     main()
