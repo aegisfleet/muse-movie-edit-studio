@@ -13,7 +13,7 @@ YAML設定の scenes[].narration を読み込み、シーンごとのナレー�
 尺ガードレール:
   生成音声がシーン尺 (duration_sec - start_offset) を超える場合、ffmpeg の
   atempo で自動圧縮し、末尾に 0.1 秒のフェードアウトを付けて、次シーンへの
-  被りと末尾の途切れを防ぐ (元実装 generate_irodori_girl_dog.py の設計を継承)。
+  被りと末尾の途切れを防ぐ。
 
 使い方:
   python scripts/generate_narration.py --config config/my_video.yaml

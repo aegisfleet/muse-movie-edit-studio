@@ -81,7 +81,7 @@ export const ShortVideo: React.FC = () => {
         />
       )}
 
-      {/* 4-2. Unified Girl Dog Inner Voice (Irodori-TTS) */}
+      {/* 4-2. Unified Narration Voice */}
       {scenes.map((scene: any, idx: number) => {
         if (!scene.narration?.audio_file) return null;
         const startFrame =

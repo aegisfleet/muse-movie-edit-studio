@@ -49,7 +49,7 @@ def get_ffmpeg_path():
 
 def select_video_encoder() -> list:
     """
-    映像エンコーダを選択する (muse-movie-edit-studio 移植時の追加)。
+    映像エンコーダを選択する。
     - 環境変数 VIDEO_ENCODER=nvenc|x264 で明示指定が可能。
     - 既定では NVIDIA GPU デバイス (nvidia-smi または /dev/nvidia0) が
       実際に存在する場合のみ h264_nvenc を使い、それ以外は libx264 に
@@ -165,7 +165,7 @@ def step_1_cut_and_grade_background(config: dict, ffmpeg_path: str):
         else:
             crop_x_ratio = float(crop_x_val)
 
-        # 色変換チェーンは入力の転送特性で分岐する (muse-movie-edit-studio 移植時の追加)。
+        # 色変換チェーンは入力の転送特性で分岐する。
         # HLG / PQ の HDR 入力のみトーンマッピングし、SDR (bt709) や
         # メタデータ無しの一般動画はそのままグレーディングする。
         # SDR を HLG チェーンに通すと zscale が "no path between colorspaces"

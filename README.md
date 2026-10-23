@@ -2,7 +2,6 @@
 
 アップロードした写真・動画素材から、SNS向けの縦型ショート動画（1080×1920 / 30fps）を自動編集するパイプライン。AIエージェント **Muse** の環境で使うことを第一に設計し、通常の Linux / Windows 環境でも単体で動作する。
 
-ベースは [aegisfleet/movie-edit-pipeline](https://github.com/aegisfleet/movie-edit-pipeline)（非公開版）で、本リポジトリはその Muse 対応・公開版である。
 
 ## 何ができるか
 
@@ -48,17 +47,27 @@ python scripts/run_pipeline.py --config config/my_video.yaml
 npm start   # Remotion のブラウザプレビュー
 ```
 
-Muse 環境では、エージェントに素材（チャット添付・写真ライブラリ・接続デバイス）を渡して「この素材で30秒の縦型ショートを作って」と依頼するだけで、上記の全手順をエージェントが実行する。エージェント向けの標準手順は [AGENTS.md](AGENTS.md)、設計判断は [docs/DESIGN.md](docs/DESIGN.md) を参照。
+Muse 環境では、エージェントに素材を渡して「この素材で30秒の縦型ショートを作って」と依頼するだけで、上記の全手順をエージェントが実行する。エージェント向けの標準手順は [AGENTS.md](AGENTS.md)、設計判断は [docs/DESIGN.md](docs/DESIGN.md) を参照。
 
-## Muse 版での主な変更点（ベースとの差分）
+## 素材ファイルの受け渡し（重要）
 
-| 項目 | ベース (movie-edit-pipeline) | 本リポジトリ |
-| :--- | :--- | :--- |
-| 実行環境 | Windows / PowerShell + NVENC 前提 | Linux / bash 対応。GPU が無い環境では `libx264` に自動フォールバック (`VIDEO_ENCODER` で明示可) |
-| ナレーション | Irodori-TTS（ローカルモデル必須） | Muse の Meta AI TTS を第一候補、edge-tts を汎用フォールバックとする `generate_narration.py` |
-| Python 依存 | requirements なし | `requirements.txt`（コア）/ `requirements-analysis.txt`（解析）に分離して固定 |
-| Remotion 合成 | Showcase 含む3 Composition | 公開版は本編 `ShortVideo` のみに整理 |
-| レンダリング設定 | concurrency=4 / gl=angle 固定 | CPU 数に応じた concurrency、OS 別の GL 既定 (`REMOTION_CONCURRENCY` / `REMOTION_GL` で上書き可) |
+Muse のチャット添付にはサイズ上限がある（web版では動画が約100MB、その他のファイルは約25MB）。**100MB を超える動画ファイルはチャットに直接アップロードできない**ため、外部ストレージを経由すること。
+
+- **Google Drive（推奨）**: Drive に素材を置けば、Muse が連携機能で作業領域へ直接ダウンロードできる。上限は実質的に作業領域のディスク容量で、GB 級のファイルでも受け渡せる（実測: 1.42GB の GoPro 動画を取得し、チェックサム一致まで確認済み）。置き場所の例: マイドライブ / `Muse` / `inputs`
+- **その他の外部ストレージ**: BOX、Dropbox 等の共有リンクを渡してもらえれば、Muse がリンク先からダウンロードして受け取る
+- **小さい素材**: 使う範囲だけを事前にトリミングして 100MB 未満に収めれば、チャット添付でも渡せる
+
+受け取った素材は作業コピーの `inputs/` に配置され、Git には含まれない（成果物の受け渡しも同様に、チャット添付または外部ストレージ経由で行う）。
+
+## 設計上の特徴
+
+| 項目 | 本リポジトリの方針 |
+| :--- | :--- |
+| 実行環境 | Muse 環境（Linux / bash）を標準とする。GPU が無い環境では `libx264` に自動フォールバックし、Windows + NVENC 環境でもそのまま動く (`VIDEO_ENCODER` で明示可) |
+| ナレーション | Muse の Meta AI TTS を第一候補とし、Muse 環境外では edge-tts に自動フォールバックする `generate_narration.py` |
+| Python 依存 | `requirements.txt`（コア）と `requirements-analysis.txt`（解析用）に分離。重い解析依存は必要な場合だけ入れる |
+| Remotion 合成 | 本編 `ShortVideo` Composition に集中し、演出はすべて YAML 駆動にする |
+| レンダリング設定 | CPU 数に応じた concurrency と OS 別の GL 既定を自動選択する (`REMOTION_CONCURRENCY` / `REMOTION_GL` で上書き可) |
 
 ## 設定ファイルの書き方
 
