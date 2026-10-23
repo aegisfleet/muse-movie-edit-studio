@@ -3,12 +3,22 @@ AI Subject Analyzer & Auto-Framing Assistant (scripts/analyze_subject.py)
 Uses Ultralytics YOLOv8 to automatically track subjects (dog, cat, person, etc.),
 compute exact bounding boxes, determine optimal 9:16 vertical crop positions,
 and score highlight candidates without manual frame-by-frame inspection.
+
+Proxy workflow (--proxy): decoding the original (e.g. 4K HEVC) frame by frame
+dominates analysis time on small machines. With --proxy, a low-resolution
+proxy video is generated once (cached under scratch/proxy/) and analyzed
+instead. Bounding boxes and crop positions are normalized coordinates, and
+timestamps are unchanged, so every result applies to the original video
+as-is. The final render always reads the original full-resolution source;
+the proxy is only a fast stand-in for analysis and framing decisions.
 """
 
 import sys
 import os
 import json
 import argparse
+import shutil
+import subprocess
 from pathlib import Path
 import cv2
 import numpy as np
@@ -37,6 +47,46 @@ def get_class_filter(target: str):
         return None
     else:
         return [16, 15]
+
+def ensure_proxy(video_path: str, width: int = 854) -> str:
+    """
+    Build (or reuse) a low-resolution proxy of the source video for analysis.
+
+    The proxy lives at scratch/proxy/<stem>_w<width>.mp4 next to the current
+    working directory and is regenerated only when the source is newer.
+    Returns the proxy path. Falls back to the source path if ffmpeg is
+    unavailable or proxy generation fails.
+    """
+    src = Path(video_path)
+    proxy_dir = Path("scratch/proxy")
+    proxy_dir.mkdir(parents=True, exist_ok=True)
+    proxy_path = proxy_dir / f"{src.stem}_w{width}.mp4"
+
+    if proxy_path.exists() and proxy_path.stat().st_mtime >= src.stat().st_mtime:
+        print(f"[Proxy] Reusing cached proxy: {proxy_path}")
+        return str(proxy_path)
+
+    ffmpeg = shutil.which("ffmpeg")
+    if not ffmpeg:
+        print("[Proxy] ffmpeg not found; analyzing the original video")
+        return video_path
+
+    print(f"[Proxy] Generating {width}px-wide proxy -> {proxy_path} (one-time cost)")
+    cmd = [
+        ffmpeg, "-y", "-v", "error",
+        "-i", str(src),
+        "-vf", f"scale={width}:-2",
+        "-an", "-c:v", "libx264", "-preset", "veryfast", "-crf", "28",
+        str(proxy_path),
+    ]
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    if result.returncode != 0 or not proxy_path.exists():
+        print(f"[Proxy] Generation failed ({result.stderr.strip()[:200]}); analyzing the original video")
+        return video_path
+    size_mb = proxy_path.stat().st_size / (1024 * 1024)
+    print(f"[Proxy] Ready: {proxy_path} ({size_mb:.1f} MB)")
+    return str(proxy_path)
+
 
 def analyze_video(
     video_path: str,
@@ -260,9 +310,15 @@ def main():
     parser.add_argument("--target", "-t", default="dog", help="Target subject (dog, cat, person, pet)")
     parser.add_argument("--interval", "-i", type=float, default=0.5, help="Sampling interval in seconds (default: 0.5s)")
     parser.add_argument("--out", "-o", default=None, help="Output JSON path (optional)")
+    parser.add_argument("--proxy", action="store_true", help="Analyze a low-resolution proxy instead of the original (results are normalized and apply to the original; recommended for 4K sources)")
+    parser.add_argument("--proxy-width", type=int, default=854, help="Proxy width in pixels (default: 854)")
     args = parser.parse_args()
 
-    records = analyze_video(args.video, target=args.target, sample_interval_sec=args.interval)
+    video_for_analysis = ensure_proxy(args.video, width=args.proxy_width) if args.proxy else args.video
+    if video_for_analysis != args.video:
+        print(f"[Proxy] Analyzing proxy in place of: {args.video} (timestamps and normalized coordinates are identical)")
+
+    records = analyze_video(video_for_analysis, target=args.target, sample_interval_sec=args.interval)
     if not records:
         return
 

@@ -19,8 +19,13 @@
 ## 汎用ワークフロー（2段階ゲート制）
 
 ```text
+Step 0: コンセプト提案 (エージェント → 利用者)
+- 素材を受け取ったら制作に入る前に、動画のコンセプトを利用者に提案し、選択を得る
+- 提案には最低限、テーマ/タイトル案、被写体のペルソナとナレーションの声 (性別・年齢感。サンプル音声を添えると確実)、テロップのトーン、BGM の方向性を含める
+- 被写体の性別等の設定は利用者に確認する (例: このポメラニアンはメスなので女の子の声を当てる)
 Step 1: 入力素材の自動解析 (scripts/analyze_subject.py)
 - YOLOv8 による被写体検出・品質スコア・最適 crop_x 算出
+- 4K 等の重い素材では `--proxy` が使える: 低解像度プロキシ (scratch/proxy/ にキャッシュ) を解析し、結果 (正規化座標・タイムスタンプ) を原画に適用する。最終レンダリングは常時原画から行う二段構え (プロキシは判断用、原画は出力用) であり、利用者にワークフローを説明する際もこの形で伝える。ただしプロキシ生成は初回のみ全デコードで時間がかかる (4K 260秒で約10.5分、以降の解析は約30秒 vs 原画直接 約3分42秒) ため、再解析を繰り返す制作ではプロキシ、単発の解析では原画直接、と使い分ける
 - 解析依存が無い環境では ffprobe とフレーム抽出で代替し、その旨を報告する
 Step 2: 設定ファイル作成 (config/<video_name>.yaml)
 - 合計尺が目標秒数に一致するようシーン構成を定義する
@@ -62,7 +67,7 @@ Step 6: 最終成果物の受入検査 (scripts/verify_composition.py)
 
 ```bash
 # 被写体解析 (任意、requirements-analysis.txt が必要)
-python scripts/analyze_subject.py --video inputs/<video>.mp4 --target dog --interval 1.0
+python scripts/analyze_subject.py --video inputs/<video>.mp4 --target dog --interval 3.0 --proxy
 
 # Gate 1: レンダリング前の構図検証
 python scripts/verify_composition.py --config config/<name>.yaml --pre

@@ -1,0 +1,155 @@
+# Video Editing Configuration for GX010100 (Pomeranian Home Adventure)
+# シーン選定と crop_x は scripts/analyze_subject.py (YOLOv8, 間隔3.0秒) の
+# 品質スコア上位区間に基づく (scratch/subject_analysis.json)
+# ナレーションの声: 被写体はメスのため女の子の声 (Meta AI TTS の MAI_01、
+# F0中央値 274Hz) への差し替えが提案済み。現行レンダーは既定の MAI_03。
+# 差し替える場合は generate_narration.py --voice avocado_v2:MAI_01 で再生成する
+project:
+  title: "ポメラニアンのおうち探検 (GX010100)"
+  input_video: "inputs/GX010100.MP4"
+  output_video: "outputs/gx010100_final.mp4"
+  duration_sec: 30
+  target_fps: 30
+  resolution:
+    width: 1080
+    height: 1920
+    aspect_ratio: "9:16"
+
+theme:
+  channel_name: "ポメラニアン（♀）の内なる声"
+  channel_badge: "🐾🌸"
+  hide_banner: false
+  show_border: true
+  bgm_track: "audio/bgm_dynamic_30s.wav"
+  bgm_volume: 0.22
+
+color_grading:
+  source_color_space: "bt2020nc"
+  source_transfer: "arib-std-b67" # HLG
+  target_color_space: "bt709"
+  tonemap_algorithm: "hable"
+
+scenes:
+  # 解析 #4 区間 (00:29.70-00:47.51)。中心フレームが最高品質サンプル
+  # (38.6s, q86.8, crop 0.50) に合うよう開始位置と crop を調整
+  # (Gate 1 初回 WARNING + Gate 2 初回「近すぎ」対応)
+  - id: "scene_1"
+    start_time: "00:00:35.6"
+    duration_sec: 6.0
+    crop_x: 0.50
+    profile: "curves=master='0/0 0.15/0.25 0.4/0.52 0.75/0.82 1/1',eq=contrast=1.05:saturation=1.26"
+    border_color: "#FF6B8B"
+    border_theme: "cute"
+    particle_type: "hearts"
+    speed_lines: false
+    narration:
+      text: "今日もおうち探検、はじまるワン！"
+      audio_file: "audio/dog_vocal_gx100_sc1.wav"
+      start_offset_frame: 10
+    subtitles:
+      - text: "おうち探検、しゅっぱーつ！🐾"
+        start_offset: 10
+        duration: 90
+        font_size: 76
+        text_color: "#FFFFFF"
+        glow_color: "rgba(255, 107, 139, 0.95)"
+        spark_color: "#FF6B8B"
+        y_offset: -40
+
+  # 安定クラスタ区間 (02:58-03:07, 連続3サンプル平均 q84.1, crop 0.80 安定)。
+  # 当初候補の #5 区間は中心フレームがブレ+接近で Gate 1 WARNING のため差し替え
+  - id: "scene_2"
+    start_time: "00:02:59.0"
+    duration_sec: 6.0
+    crop_x: 0.67
+    profile: "curves=master='0/0 0.15/0.25 0.4/0.52 0.75/0.82 1/1',eq=contrast=1.05:saturation=1.26"
+    border_color: "#FF9F45"
+    border_theme: "cute"
+    particle_type: "hearts"
+    speed_lines: false
+    narration:
+      text: "ご主人様の後ろ、ついてくワン♪"
+      audio_file: "audio/dog_vocal_gx100_sc2.wav"
+      start_offset_frame: 10
+    subtitles:
+      - text: "あと、ついてくワン♪🐾"
+        start_offset: 10
+        duration: 90
+        font_size: 76
+        text_color: "#FFFFFF"
+        glow_color: "rgba(255, 158, 69, 0.95)"
+        spark_color: "#FF9F45"
+        y_offset: -40
+
+  # 解析 #2 区間 (01:46.91-01:58.79, 品質77.0, crop 0.58)
+  - id: "scene_3"
+    start_time: "00:01:50.0"
+    duration_sec: 6.0
+    crop_x: 0.58
+    profile: "curves=master='0/0 0.15/0.25 0.4/0.52 0.75/0.82 1/1',eq=contrast=1.05:saturation=1.26"
+    border_color: "#FF6B8B"
+    border_theme: "cute"
+    particle_type: "hearts"
+    speed_lines: false
+    narration:
+      text: "あれ…？なにか気になるワン…！"
+      audio_file: "audio/dog_vocal_gx100_sc3.wav"
+      start_offset_frame: 10
+    subtitles:
+      - text: "あれ…？気になるワン…！👀"
+        start_offset: 10
+        duration: 90
+        font_size: 76
+        text_color: "#FFE600"
+        glow_color: "rgba(255, 107, 139, 0.95)"
+        spark_color: "#FF6B8B"
+        y_offset: -40
+
+  # 当初は解析 #3 区間 (02:16) だったが Gate 2 の目視で後頭部中心と判明し、
+  # 146s の笑顔ドアップ (実フレームで目視確認済み) に差し替え
+  - id: "scene_4"
+    start_time: "00:02:23.0"
+    duration_sec: 6.0
+    crop_x: 0.59
+    profile: "curves=master='0/0 0.15/0.25 0.4/0.52 0.75/0.82 1/1',eq=contrast=1.05:saturation=1.26"
+    border_color: "#FF9F45"
+    border_theme: "cute"
+    particle_type: "hearts"
+    speed_lines: false
+    narration:
+      text: "ご主人様、ちゃんと見てる？えへへ！"
+      audio_file: "audio/dog_vocal_gx100_sc4.wav"
+      start_offset_frame: 10
+    subtitles:
+      - text: "ちゃんと見てる〜？😆"
+        start_offset: 10
+        duration: 90
+        font_size: 76
+        text_color: "#FFFFFF"
+        glow_color: "rgba(255, 158, 69, 0.95)"
+        spark_color: "#FF9F45"
+        y_offset: -40
+
+  # 解析 #1 区間 (04:03.51-04:12.42, 品質78.0, crop 0.22) クライマックス
+  - id: "scene_5"
+    start_time: "00:04:04.0"
+    duration_sec: 6.0
+    crop_x: 0.22
+    profile: "curves=master='0/0 0.15/0.25 0.4/0.52 0.75/0.82 1/1',eq=contrast=1.05:saturation=1.26"
+    border_color: "#FF6B8B"
+    border_theme: "cute"
+    particle_type: "hearts"
+    speed_lines: false
+    narration:
+      text: "今日もいっぱい遊んだワン！大好き！"
+      audio_file: "audio/dog_vocal_gx100_sc5.wav"
+      start_offset_frame: 10
+    subtitles:
+      - text: "いっぱい遊んだワン！💖"
+        start_offset: 10
+        duration: 90
+        font_size: 76
+        text_color: "#FFFFFF"
+        glow_color: "rgba(255, 107, 139, 0.95)"
+        spark_color: "#FF6B8B"
+        y_offset: -40
