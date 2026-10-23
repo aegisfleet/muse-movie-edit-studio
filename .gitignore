@@ -1,0 +1,37 @@
+# Node
+node_modules/
+dist/
+.remotion/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+env/
+.env
+
+# Media & Outputs (大容量ファイル)
+*.MP4
+*.mp4
+*.mov
+*.MOV
+*.wav
+*.WAV
+*.mp3
+outputs/
+!outputs/.gitkeep
+inputs/
+!inputs/.gitkeep
+public/*.mp4
+public/audio/
+
+# Submodules & External Models
+modules/
+
+# IDE / System
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+scratch/
+*.pt

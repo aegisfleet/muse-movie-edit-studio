@@ -1,0 +1,5 @@
+# Optional: subject analysis / composition verification with local CV models
+# (scripts/analyze_subject.py, scripts/analyze_fireworks.py, verify_composition.py の YOLO 経路)
+-r requirements.txt
+opencv-python>=4.9
+ultralytics>=8.2  # YOLOv8 (torch を含むため容量が大きい。CPU 環境では yolov8n + 間引きサンプリング推奨)

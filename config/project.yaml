@@ -1,0 +1,73 @@
+# Video Editing Configuration for Fireworks Showcase (30-second Climax Cut)
+project:
+  title: "自宅から見えた花火 (30s Climax & Finale)"
+  input_video: "inputs/PXL_20261002_111358696.mp4"
+  output_video: "outputs/final.mp4"
+  duration_sec: 30
+  target_fps: 30
+  resolution:
+    width: 1080
+    height: 1920
+    aspect_ratio: "9:16"
+
+theme:
+  channel_name: "自宅から見えた花火"
+  channel_badge: "🎆✨"
+  hide_banner: false
+  show_border: true
+  bgm_track: "audio/Afterglow_of_July.mp3"
+  bgm_volume: 0.28
+  live_audio: "audio/live_audio.wav"
+  live_volume: 0.90
+  audio_boost_db: 19.0
+
+color_grading:
+  source_color_space: "bt2020nc"
+  source_transfer: "arib-std-b67" # HLG
+  target_color_space: "bt709"
+  tonemap_algorithm: "hable"
+
+scenes:
+  - id: "scene_1"
+    video: "inputs/PXL_20261002_111358696.mp4"
+    start_time: "00:00:50.0"
+    duration_sec: 10.0
+    crop_x: 0.48
+    profile: "eq=contrast=1.05:saturation=1.12"
+    border_color: "#FFAE00"
+    border_theme: "action"
+    particle_type: "sparks"
+    speed_lines: false
+    subtitles:
+      - text: "自宅から見えた花火 🎆✨"
+        start_offset: 15
+        duration: 120
+        font_size: 70
+        text_color: "#FFFFFF"
+        glow_color: "rgba(255, 174, 0, 0.95)"
+        spark_color: "#FFAE00"
+        y_offset: -40
+
+  - id: "scene_2"
+    video: "inputs/PXL_20261002_111358696.mp4"
+    start_time: "00:01:13.0"
+    duration_sec: 13.0
+    crop_x: 0.65
+    profile: "eq=contrast=1.05:saturation=1.12"
+    border_color: "#FF3366"
+    border_theme: "action"
+    particle_type: "sparks"
+    speed_lines: false
+    subtitles: []
+
+  - id: "scene_3"
+    video: "inputs/PXL_20261002_111358696.mp4"
+    start_time: "00:01:38.0"
+    duration_sec: 7.0
+    crop_x: 0.75
+    profile: "eq=contrast=1.05:saturation=1.12"
+    border_color: "#FFD700"
+    border_theme: "action"
+    particle_type: "sparks"
+    speed_lines: false
+    subtitles: []

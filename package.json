@@ -1,0 +1,33 @@
+{
+  "name": "muse-movie-edit-studio",
+  "version": "1.0.0",
+  "description": "Muse-first video editing studio: Remotion + ffmpeg pipeline turning uploaded photos/videos into vertical short movies, with Meta AI TTS narration",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "remotion preview src/index.tsx",
+    "build": "remotion render src/index.tsx ShortVideo outputs/final.mp4",
+    "render": "remotion render src/index.tsx ShortVideo outputs/final.mp4"
+  },
+  "keywords": [
+    "remotion",
+    "video-edit",
+    "muse",
+    "ffmpeg",
+    "tts",
+    "jizura"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@remotion/cli": "^4.0.260",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "remotion": "^4.0.260"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "^5.7.0"
+  }
+}

@@ -1,0 +1,6 @@
+# Core pipeline (run_pipeline.py / generate_narration.py / verify_composition.py)
+PyYAML>=6.0
+numpy>=1.26
+edge-tts>=7.0  # narration fallback outside the Muse environment
+
+# System requirements (not pip): ffmpeg (zscale, xfade, tonemap, libx264 or NVENC), Node.js 20+

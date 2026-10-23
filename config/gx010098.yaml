@@ -1,0 +1,264 @@
+# Video Editing Configuration for Antigravity & Remotion Pipeline
+project:
+  title: "Pomeranian Playtime & Smile"
+  input_video: "inputs/GX010098.MP4"
+  output_video: "outputs/final.mp4"
+  duration_sec: 30
+  target_fps: 30
+  resolution:
+    width: 1080
+    height: 1920
+    aspect_ratio: "9:16"
+
+theme:
+  channel_name: "ポメラニアン（♀）の内なる声"
+  channel_badge: "🐾🌸"
+  bgm_track: "audio/bgm_dynamic_30s.wav"
+  bgm_volume: 0.22
+
+color_grading:
+  source_color_space: "bt2020nc"
+  source_transfer: "arib-std-b67" # HLG
+  target_color_space: "bt709"
+  tonemap_algorithm: "hable"
+
+scenes:
+  - id: "scene_1"
+    start_time: "00:00:00.8"
+    duration_sec: 5.0
+    crop_x: 0.15 # 左寄り15%でソファ上の犬を中央配置
+    profile: "curves=master='0/0 0.15/0.25 0.4/0.52 0.75/0.82 1/1',eq=contrast=1.05:saturation=1.26"
+    border_color: "#FF6B8B"
+    border_theme: "cute"
+    particle_type: "hearts"
+    speed_lines: false
+    narration:
+      text: "このオモチャ、わたしの宝物なの！渡さないワン！💖"
+      audio_file: "audio/dog_vocal_sc1.wav"
+      start_offset_frame: 10
+    subtitles:
+      - text: "このオモチャ、大好きなの！"
+        start_offset: 10
+        duration: 60
+        font_size: 76
+        text_color: "#FFFFFF"
+        glow_color: "rgba(255, 107, 139, 0.95)"
+        spark_color: "#FF6B8B"
+        y_offset: -40
+      - text: "絶対に渡さないワン！💖"
+        start_offset: 70
+        duration: 65
+        font_size: 72
+        text_color: "#FFE6AA"
+        glow_color: "rgba(255, 158, 69, 0.95)"
+        spark_color: "#FF9F45"
+        y_offset: -40
+    stickers:
+      - emoji: "🧸"
+        start_offset: 15
+        size: 130
+        rotation: -10
+        x: 840
+        y: 460
+      - emoji: "💖"
+        start_offset: 70
+        size: 130
+        rotation: 12
+        x: 180
+        y: 860
+    se:
+      - sound: "audio/se_pop.wav"
+        start_offset: 10
+        volume: 0.65
+
+  - id: "scene_2"
+    start_time: "00:00:13.5"
+    duration_sec: 5.0
+    crop_x: 0.30 # ソファ下の犬を中央配置
+    profile: "curves=master='0/0 0.2/0.22 0.5/0.52 0.8/0.82 1/1',eq=contrast=1.10:brightness=0.02:saturation=1.24"
+    border_color: "#FFE600"
+    border_theme: "action"
+    particle_type: "sparks"
+    speed_lines: true
+    narration:
+      text: "ご主人様、なにしてるの？じーっと見つめちゃうワン！✨"
+      audio_file: "audio/dog_vocal_sc2.wav"
+      start_offset_frame: 5
+    subtitles:
+      - text: "ご主人様、なにしてるの？"
+        start_offset: 5
+        duration: 65
+        font_size: 74
+        text_color: "#FFE600"
+        glow_color: "rgba(255, 0, 85, 0.95)"
+        spark_color: "#FFE600"
+        y_offset: -40
+      - text: "じーっと見つめちゃうワン！🥺✨"
+        start_offset: 70
+        duration: 70
+        font_size: 70
+        text_color: "#FF5E97"
+        glow_color: "rgba(255, 230, 0, 0.95)"
+        spark_color: "#FF007F"
+        y_offset: -40
+    stickers:
+      - emoji: "🥺"
+        start_offset: 10
+        size: 140
+        rotation: 10
+        x: 160
+        y: 420
+      - emoji: "✨"
+        start_offset: 65
+        size: 130
+        rotation: -15
+        x: 840
+        y: 850
+    se:
+      - sound: "audio/se_sparkle.wav"
+        start_offset: 5
+        volume: 0.7
+
+  - id: "scene_3"
+    start_time: "00:00:52.5"
+    duration_sec: 8.0
+    crop_x: 0.65 # 廊下で尻尾を追いかけてクルクル回るアクションをど真ん中に
+    profile: "curves=master='0/0 0.15/0.25 0.4/0.52 0.75/0.82 1/1',eq=contrast=1.04:saturation=1.26"
+    border_color: "#6BCB77"
+    border_theme: "action"
+    particle_type: "sparks"
+    speed_lines: true
+    narration:
+      text: "あ、しっぽ発見！待て待て〜！クルクル回っちゃう🌀"
+      audio_file: "audio/dog_vocal_sc3.wav"
+      start_offset_frame: 10
+    subtitles:
+      - text: "あ、しっぽ発見！👀"
+        start_offset: 10
+        duration: 105
+        font_size: 74
+        text_color: "#FFFFFF"
+        glow_color: "rgba(107, 203, 119, 0.95)"
+        spark_color: "#6BCB77"
+        y_offset: -40
+      - text: "待て待て〜！クルクル回っちゃう🌀💫"
+        start_offset: 120
+        duration: 110
+        font_size: 68
+        text_color: "#FFE600"
+        glow_color: "rgba(255, 107, 139, 0.9)"
+        spark_color: "#FF6B8B"
+        y_offset: -40
+    stickers:
+      - emoji: "🌀"
+        start_offset: 15
+        size: 140
+        rotation: -15
+        x: 160
+        y: 420
+      - emoji: "💨"
+        start_offset: 115
+        size: 140
+        rotation: 12
+        x: 840
+        y: 700
+    se:
+      - sound: "audio/se_curious.wav"
+        start_offset: 10
+        volume: 0.7
+
+  - id: "scene_4"
+    start_time: "00:00:48.5"
+    duration_sec: 7.0
+    crop_x: 0.25 # もふもふお尻を画面中央に配置
+    profile: "curves=master='0/0 0.15/0.24 0.4/0.50 0.75/0.80 1/1',eq=contrast=1.06:brightness=0.02:saturation=1.25"
+    border_color: "#FF9F45"
+    border_theme: "curious"
+    particle_type: "sparks"
+    speed_lines: false
+    narration:
+      text: "わたしの自慢のふわふわお尻、見ててね〜♪🍑"
+      audio_file: "audio/dog_vocal_sc4.wav"
+      start_offset_frame: 8
+    subtitles:
+      - text: "わたしの自慢のもふもふお尻🍑"
+        start_offset: 8
+        duration: 95
+        font_size: 70
+        text_color: "#FFE6AA"
+        glow_color: "rgba(255, 158, 69, 0.95)"
+        spark_color: "#FF9F45"
+        y_offset: -40
+      - text: "歩くマシュマロとは私のこと♪"
+        start_offset: 105
+        duration: 95
+        font_size: 72
+        text_color: "#FFFFFF"
+        glow_color: "rgba(255, 107, 139, 0.9)"
+        spark_color: "#FF6B8B"
+        y_offset: -40
+    stickers:
+      - emoji: "🍑"
+        start_offset: 10
+        size: 150
+        rotation: 10
+        x: 840
+        y: 460
+      - emoji: "☁️"
+        start_offset: 100
+        size: 130
+        rotation: -12
+        x: 160
+        y: 780
+    se:
+      - sound: "audio/se_pop.wav"
+        start_offset: 8
+        volume: 0.65
+
+  - id: "scene_5"
+    start_time: "00:00:25.5"
+    duration_sec: 5.0
+    crop_x: 0.25 # ベッドで舌を出してリラックス笑顔をど真ん中に
+    profile: "curves=master='0/0 0.15/0.24 0.4/0.50 0.75/0.80 1/1',eq=contrast=1.06:brightness=0.02:saturation=1.26"
+    border_color: "#AA96DA"
+    border_theme: "chill"
+    particle_type: "hearts"
+    speed_lines: false
+    narration:
+      text: "大好き！いっぱい遊んでくれてありがとー！💖"
+      audio_file: "audio/dog_vocal_sc5.wav"
+      start_offset_frame: 5
+    subtitles:
+      - text: "ご主人様だいすきーっ！😆💖"
+        start_offset: 5
+        duration: 65
+        font_size: 74
+        text_color: "#FFFFFF"
+        glow_color: "rgba(255, 107, 139, 0.95)"
+        spark_color: "#FF6B8B"
+        y_offset: -40
+      - text: "明日もいっぱい遊ぼうね🐶✨"
+        start_offset: 70
+        duration: 65
+        font_size: 74
+        text_color: "#FFE600"
+        glow_color: "rgba(170, 150, 218, 0.95)"
+        spark_color: "#AA96DA"
+        y_offset: -40
+    stickers:
+      - emoji: "🥺"
+        start_offset: 10
+        size: 130
+        rotation: -10
+        x: 160
+        y: 520
+      - emoji: "💖"
+        start_offset: 70
+        size: 140
+        rotation: 15
+        x: 840
+        y: 800
+    se:
+      - sound: "audio/se_sparkle.wav"
+        start_offset: 5
+        volume: 0.7
